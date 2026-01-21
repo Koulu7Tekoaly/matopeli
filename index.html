@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Minun Matopeli</title>
+    <style>
+        /* Tässä määritellään pelin ulkoasu */
+        body { 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            background-color: #1a1a1a; 
+            color: white; 
+            font-family: 'Arial', sans-serif;
+            margin-top: 50px;
+        }
+        canvas { 
+            border: 5px solid #444; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            background-color: #000; 
+        }
+        .stats { font-size: 24px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="stats">Pisteet: <span id="pisteet">0</span></div>
+    <canvas id="snakeGame" width="400" height="400"></canvas>
+    <p>Käytä nuolinäppäimiä ohjaamiseen!</p>
+
+    <script>
+        const canvas = document.getElementById("snakeGame");
+        const ctx = canvas.getContext("2d");
+        const scoreElement = document.getElementById("pisteet");
+
+        let box = 20; // Yhden ruudun koko
+        let score = 0;
+        
+        // Madon alkuasento
+        let snake = [{ x: 9 * box, y: 10 * box }];
+
+        // Ruoan aloituspaikka
+        let food = {
+            x: Math.floor(Math.random() * 19 + 1) * box,
+            y: Math.floor(Math.random() * 19 + 1) * box
+        };
+
+        let d; // Suunta
+
+        // Kuunnellaan näppäimistöä
+        document.addEventListener("keydown", direction);
+
+        function direction(event) {
+            let key = event.keyCode;
+            if(key == 37 && d != "RIGHT") d = "LEFT";
+            else if(key == 38 && d != "DOWN") d = "UP";
+            else if(key == 39 && d != "LEFT") d = "RIGHT";
+            else if(key == 40 && d != "UP") d = "DOWN";
+        }
+
+        // Törmäystarkistus
+        function collision(head, array) {
+            for(let i = 0; i < array.length; i++) {
+                if(head.x == array[i].x && head.y == array[i].y) return true;
+            }
+            return false;
